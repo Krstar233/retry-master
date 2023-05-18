@@ -1,7 +1,7 @@
 {
-  "name": "rollup-quick-start",
+  "name": "retry-task",
   "version": "1.0.0",
-  "description": "A quick tool",
+  "description": "Retry Task",
   "main": "index.js",
   "types": "./src/index.d.ts",
   "keywords": ["JavaScript"],

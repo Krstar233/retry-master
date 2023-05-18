@@ -26,7 +26,8 @@ export default [{
         commonjs({
             namedExports: {
                 'chai': ['expect'],
-                "simp-spec": ["it", "spec", "runTests", "beforeAll", "afterAll", "beforeEach", "afterEach"]
+                "simp-spec": ["it", "spec", "runTests", "beforeAll", "afterAll", "beforeEach", "afterEach"],
+                "retry-task": ["RetryTask"]
             }
         }),
         typescript({ typescript: require('typescript')}),
