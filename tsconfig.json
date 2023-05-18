@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "lib": ["DOM", "ES2015", "WebWorker"],
+    "module": "es2020",
+    "target": "ES5",
+    "importHelpers": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "rootDir": ".",
+    "declaration": true,
+    "skipLibCheck": true,
+  },  
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "typedocOptions": {
+    "entryPoints": ["src/index.ts"],
+    "out": "docs",
+    "includeVersion": false,
+    "disableSources": false,
+    "includes": ["src/**/*.ts"],
+    "exclude": ["node_modules"],
+  }
+}

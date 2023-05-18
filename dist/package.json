@@ -1,0 +1,10 @@
+{
+  "name": "rollup-quick-start",
+  "version": "1.0.0",
+  "description": "A quick tool",
+  "main": "index.js",
+  "types": "./src/index.d.ts",
+  "keywords": ["JavaScript"],
+  "author": "kr_star",
+  "license": "ISC"
+}
