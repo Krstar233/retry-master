@@ -1,6 +1,6 @@
 # RetryTask
 
-**RetryTask** 是一个简单而强大的工具，它允许您开启一个任务，并在失败时不断重试直到成功。该工具适用于需要在不稳定的环境中执行操作或处理不可预测错误的场景。
+**RetryTask** 是一个简单而实用的工具，它允许您开启一个任务，并在失败时不断重试直到成功。该工具适用于需要在不稳定的环境中执行操作或处理不可预测错误的场景。
 
 ## 安装
 
@@ -15,7 +15,7 @@ npm install retry-task
 以下是一个简单的示例，演示了如何使用 RetryTask 进行任务重试：
 
 ```javascript
-const RetryTask = require('retry-task');
+import { RetryTask } from 'retry-task';
 
 let flag = 0;
 await RetryTask.run((done, fail, abort) => {
@@ -30,8 +30,8 @@ await RetryTask.run((done, fail, abort) => {
     }
   }, 10);
 }, {
-   retryMaxTime: 15,
-   timeout: 1000
+   retryMaxTimes: 15,
+   timeout: 1000,
 }).catch(err => {
   // 处理错误或超时情况
 });
@@ -43,8 +43,8 @@ await RetryTask.run((done, fail, abort) => {
 
 RetryTask 提供了一些可选的配置选项，用于自定义任务重试的行为。以下是可用的配置选项：
 
-- `retryMaxTime`（可选）：指定任务最大重试次数。默认为 5。
-- `retryDelay`（可选）：指定每次重试之间的延迟时间（毫秒）。默认为 1000。
+- `retryMaxTimes`（可选）：指定任务最大重试次数。默认为 10。
+- `retryDelay`（可选）：指定每次重试之间的延迟时间（毫秒）。默认为 0。
 - `timeout`（可选）：指定任务超时时间（毫秒）。如果任务在超时之前没有成功完成，将被视为失败。默认为 30000。
 
 ## 贡献

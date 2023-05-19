@@ -5,18 +5,25 @@ export interface RetryTaskConfig {
     /**
      * 最大重试次数
      */
-    retryMaxTime: number;
+    retryMaxTimes?: number;
     /**
      * 超时时间
      */
-    timeout: number
+    timeout?: number;
+    /**
+     * 重试间隔
+     */
+    retryDelay?: number;
 }
 /**
  * 重试任务
  */
 export class RetryTask {
-    private _timeout = 60 * 1e3; // default retry 1 min
+    private _retryDelay = 0;
+    private _timeout = 30 * 1e3; // default retry 30s
     private _timeoutTimer: any = null;
+    private _retryMaxTimes = 10; // default 10 times
+    private _retryCount = 0;
 
     private constructor(
         private _resolve: (value: RetryTask | PromiseLike<RetryTask>) => void,
@@ -26,6 +33,8 @@ export class RetryTask {
     ) {
         if (config) {
             config.timeout && (this._timeout = config.timeout);
+            config.retryDelay && (this._retryDelay = config.retryDelay);
+            config.retryMaxTimes && (this._retryMaxTimes = config.retryMaxTimes);
         }
         this._start();
     }
@@ -36,7 +45,9 @@ export class RetryTask {
     }
 
     private _fail() {
-        this._callTask();
+        setTimeout(() => {
+            this._callTask();
+        }, this._retryDelay);
     }
 
     private _clearMaxTimer() {
@@ -52,6 +63,11 @@ export class RetryTask {
     }
 
     private _callTask() {
+        this._retryCount++;
+        if (this._retryCount > this._retryMaxTimes) {
+            this._abort({ retryMaxTimes: true });
+            return;
+        }
         this._callback(this._done.bind(this), this._fail.bind(this), this._abort.bind(this));
     }
 

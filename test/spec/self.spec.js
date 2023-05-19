@@ -70,6 +70,26 @@ export default spec("retry task test", function() {
     });
   });
 
+  it("retry max times", async done => {
+    let flag = 0;
+    await RetryTask.run((done, fail, abort) => {
+      setTimeout(() => {
+        flag++;
+        if (flag === 10) {
+            done();
+        } else {
+            fail();
+        }
+      }, 0);
+    }, {
+        retryMaxTimes: 3
+    }).catch(err => {
+        expect(err.retryMaxTimes).true;
+        expect(flag === 3).true;
+        done();
+    });
+  });
+
   afterEach(async done => {
     done();
   });
