@@ -1,21 +1,21 @@
-# RetryTask
+# RetryTaskJS
 
-**RetryTask** 是一个简单而实用的工具，它允许您开启一个任务，并在失败时不断重试直到成功。该工具适用于需要在不稳定的环境中执行操作或处理不可预测错误的场景。
+**RetryTaskJS** 是一个简单而实用的工具，它允许您开启一个任务，并在失败时不断重试直到成功。该工具适用于需要在不稳定的环境中执行操作或处理不可预测错误的场景。
 
 ## 安装
 
-使用 npm 安装 RetryTask：
+使用 npm 安装 RetryTaskJS：
 
 ```
-npm install retry-task
+npm install retry-task-js
 ```
 
 ## 使用示例
 
-以下是一个简单的示例，演示了如何使用 RetryTask 进行任务重试：
+以下是一个简单的示例，演示了如何使用 RetryTaskJS 进行任务重试：
 
 ```javascript
-import { RetryTask } from 'retry-task';
+import { RetryTask } from 'retry-task-js';
 
 let flag = 0;
 await RetryTask.run((done, fail, abort) => {
@@ -47,7 +47,7 @@ await RetryTask.run((done, fail, abort) => {
 
 ## 配置选项
 
-RetryTask 提供了一些可选的配置选项，用于自定义任务重试的行为。以下是可用的配置选项：
+RetryTaskJS 提供了一些可选的配置选项，用于自定义任务重试的行为。以下是可用的配置选项：
 
 - `retryMaxTimes`（可选）：指定任务最大重试次数。默认为 10。
 - `retryDelay`（可选）：指定每次重试之间的延迟时间（毫秒）。默认为 0。
@@ -55,8 +55,8 @@ RetryTask 提供了一些可选的配置选项，用于自定义任务重试的�
 
 ## 贡献
 
-欢迎对 RetryTask 提交问题和改进建议。如果您发现了 Bug，或者有任何改进意见，请在 GitHub 存储库中创建一个新的 issue。
+欢迎对 RetryTaskJS 提交问题和改进建议。如果您发现了 Bug，或者有任何改进意见，请在 GitHub 存储库中创建一个新的 issue。
 
 ## 许可证
 
-RetryTask 使用 [MIT 许可证](https://opensource.org/licenses/MIT)。
+RetryTaskJS 使用 [MIT 许可证](https://opensource.org/licenses/MIT)。

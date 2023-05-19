@@ -1,5 +1,5 @@
 import { expect, it, spec, beforeAll, afterAll, beforeEach, afterEach } from "../common";
-import { RetryTask } from "retry-task"
+import { RetryTask } from "retry-task-js"
 
 export default spec("npm test", function() {
 

@@ -27,7 +27,7 @@ export default [{
             namedExports: {
                 'chai': ['expect'],
                 "simp-spec": ["it", "spec", "runTests", "beforeAll", "afterAll", "beforeEach", "afterEach"],
-                "retry-task": ["RetryTask"]
+                "retry-task-js": ["RetryTask"]
             }
         }),
         typescript({ typescript: require('typescript')}),

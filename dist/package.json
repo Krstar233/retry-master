@@ -1,5 +1,5 @@
 {
-  "name": "retry-task",
+  "name": "retry-task-js",
   "version": "1.0.0",
   "description": "Start the task until the retry succeeds",
   "main": "index.js",
