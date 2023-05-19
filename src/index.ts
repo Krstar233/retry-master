@@ -19,11 +19,14 @@ export interface RetryTaskConfig {
  * 重试任务
  */
 export class RetryTask {
+    private _isDone = false;
+    private _isAborted = false;
     private _retryDelay = 0;
     private _timeout = 30 * 1e3; // default retry 30s
     private _timeoutTimer: any = null;
     private _retryMaxTimes = 10; // default 10 times
     private _retryCount = 0;
+    private _callbackTimerList: any[] = [];
 
     private constructor(
         private _resolve: (value: RetryTask | PromiseLike<RetryTask>) => void,
@@ -39,15 +42,36 @@ export class RetryTask {
         this._start();
     }
 
+    private _canCallTask() {
+        return !this._isAborted && !this._isDone;
+    }
+
+    private _clearCallbackTimerList() {
+        this._callbackTimerList.forEach(cbtimer => {
+            clearTimeout(cbtimer);
+        });
+        this._callbackTimerList = [];
+    }
+
     private _done() {
         this._clearMaxTimer();
+        this._isDone = true;
+        this._clearCallbackTimerList();
         this._resolve(this);
     }
 
     private _fail() {
-        setTimeout(() => {
-            this._callTask();
-        }, this._retryDelay);
+        if (!this._canCallTask()) {
+            return;
+        }
+        const cbTimer = setTimeout(() => {
+            this._callbackTimerList = this._callbackTimerList.filter(timer => timer !== cbTimer);
+            clearTimeout(cbTimer);
+            if (this._canCallTask()) {
+                this._callTask();
+            }
+        }, this._retryDelay * this._callbackTimerList.length + 1);
+        this._callbackTimerList.push(cbTimer);
     }
 
     private _clearMaxTimer() {
@@ -59,6 +83,7 @@ export class RetryTask {
 
     private _abort(reason: any) {
         this._clearMaxTimer();
+        this._isAborted = true;
         this._reject(reason);
     }
 
@@ -68,7 +93,7 @@ export class RetryTask {
             this._abort({ retryMaxTimes: true });
             return;
         }
-        this._callback(this._done.bind(this), this._fail.bind(this), this._abort.bind(this));
+        this._canCallTask() && this._callback(this._done.bind(this), this._fail.bind(this), this._abort.bind(this));
     }
 
     private _start() {

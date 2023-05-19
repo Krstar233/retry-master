@@ -90,6 +90,97 @@ export default spec("retry task test", function() {
     });
   });
 
+  it("multi hook", async done => {
+    let flag = 0;
+    await RetryTask.run((done, fail, abort) => {
+      flag++;
+      fail();
+      abort("123");
+      done();
+    }, {
+        retryMaxTimes: 3
+    }).catch(err => {
+        expect(err).eq("123");
+    });
+    expect(flag).eq(1);
+    done();
+  });
+
+  it("multi hook 2", async done => {
+    let flag = 0;
+    const task = await RetryTask.run((done, fail, abort) => {
+      flag++;
+      fail();
+      fail();
+      fail();
+      if (flag === 3) {
+        done();
+      }
+    }, {
+        retryMaxTimes: 3
+    }).catch(err => {});
+    expect(flag).eq(3);
+    expect(task._callbackTimerList.length).eq(0);
+    setTimeout(()=>{
+      expect(flag).eq(3);
+      done();
+    }, 100);
+  });
+
+  it("multi hook 3", async done => {
+    let flag = 0;
+    const task = await RetryTask.run((done, fail, abort) => {
+      flag++;
+      done();done();done();done();fail();
+    }, {
+        retryMaxTimes: 100
+    }).catch(err => {});
+    expect(flag).eq(1);
+    expect(task._callbackTimerList.length).eq(0);
+    setTimeout(()=>{
+      expect(flag).eq(1);
+      done();
+    }, 100);
+  });
+
+  it("multi hook 4", async done => {
+    let flag = 0;
+    let catchErr = 0;
+    const task = await RetryTask.run((done, fail, abort) => {
+      flag++;
+      done();done();done();done();fail();abort();
+    }, {
+        retryMaxTimes: 100
+    }).catch(err => {catchErr++;});
+    expect(flag).eq(1);
+    expect(task._callbackTimerList.length).eq(0);
+    setTimeout(()=>{
+      expect(flag).eq(1);
+      expect(catchErr).eq(0);
+      done();
+    }, 100);
+  });
+
+
+  it("multi hook 5", async done => {
+    let flag = 0;
+    let catchErr = 0;
+    const task = await RetryTask.run((done, fail, abort) => {
+      flag++;
+      fail();fail();fail();abort();abort();
+    }, {
+        retryMaxTimes: 100
+    }).catch(err => {
+      catchErr++;
+    });
+    expect(flag).eq(1);
+    setTimeout(()=>{
+      expect(flag).eq(1);
+      expect(catchErr).eq(1);
+      done();
+    }, 100);
+  });
+
   afterEach(async done => {
     done();
   });
