@@ -34,6 +34,12 @@ await RetryTask.run((done, fail, abort) => {
    timeout: 1000,
 }).catch(err => {
   // 处理错误或超时情况
+  if (err && err.timeout) {
+    // 任务超时处理
+  }
+  if (err && err.retryMaxTimes) {
+    // 任务超过最大重试次数处理
+  }
 });
 ```
 
