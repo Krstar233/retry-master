@@ -5,11 +5,15 @@ export interface RetryTaskConfig {
     /**
      * 最大重试次数
      */
-    retryMaxTime: number;
+    retryMaxTimes?: number;
     /**
      * 超时时间
      */
-    timeout: number;
+    timeout?: number;
+    /**
+     * 重试间隔
+     */
+    retryDelay?: number;
 }
 /**
  * 重试任务
@@ -18,8 +22,11 @@ export declare class RetryTask {
     private _resolve;
     private _reject;
     private _callback;
+    private _retryDelay;
     private _timeout;
     private _timeoutTimer;
+    private _retryMaxTimes;
+    private _retryCount;
     private constructor();
     private _done;
     private _fail;
