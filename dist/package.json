@@ -1,7 +1,7 @@
 {
   "name": "retry-task",
   "version": "1.0.0",
-  "description": "Retry Task",
+  "description": "Start the task until the retry succeeds",
   "main": "index.js",
   "types": "./src/index.d.ts",
   "keywords": ["JavaScript"],

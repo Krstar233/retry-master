@@ -1,7 +1,7 @@
 {
   "name": "retry-task",
   "version": "1.0.0",
-  "description": "",
+  "description": "Start the task until the retry succeeds",
   "main": "index.ts",
   "scripts": {
     "dev": "rollup -c rollup.config.js -w --bundleConfigAsCjs",
