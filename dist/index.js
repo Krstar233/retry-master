@@ -12,11 +12,14 @@
             this._resolve = _resolve;
             this._reject = _reject;
             this._callback = _callback;
+            this._isDone = false;
+            this._isAborted = false;
             this._retryDelay = 0;
             this._timeout = 30 * 1e3; // default retry 30s
             this._timeoutTimer = null;
             this._retryMaxTimes = 10; // default 10 times
             this._retryCount = 0;
+            this._callbackTimerList = [];
             if (config) {
                 config.timeout && (this._timeout = config.timeout);
                 config.retryDelay && (this._retryDelay = config.retryDelay);
@@ -24,15 +27,34 @@
             }
             this._start();
         }
+        RetryTask.prototype._canCallTask = function () {
+            return !this._isAborted && !this._isDone;
+        };
+        RetryTask.prototype._clearCallbackTimerList = function () {
+            this._callbackTimerList.forEach(function (cbtimer) {
+                clearTimeout(cbtimer);
+            });
+            this._callbackTimerList = [];
+        };
         RetryTask.prototype._done = function () {
             this._clearMaxTimer();
+            this._isDone = true;
+            this._clearCallbackTimerList();
             this._resolve(this);
         };
         RetryTask.prototype._fail = function () {
             var _this = this;
-            setTimeout(function () {
-                _this._callTask();
-            }, this._retryDelay);
+            if (!this._canCallTask()) {
+                return;
+            }
+            var cbTimer = setTimeout(function () {
+                _this._callbackTimerList = _this._callbackTimerList.filter(function (timer) { return timer !== cbTimer; });
+                clearTimeout(cbTimer);
+                if (_this._canCallTask()) {
+                    _this._callTask();
+                }
+            }, this._retryDelay * this._callbackTimerList.length + 1);
+            this._callbackTimerList.push(cbTimer);
         };
         RetryTask.prototype._clearMaxTimer = function () {
             if (this._timeoutTimer) {
@@ -42,6 +64,7 @@
         };
         RetryTask.prototype._abort = function (reason) {
             this._clearMaxTimer();
+            this._isAborted = true;
             this._reject(reason);
         };
         RetryTask.prototype._callTask = function () {
@@ -50,7 +73,7 @@
                 this._abort({ retryMaxTimes: true });
                 return;
             }
-            this._callback(this._done.bind(this), this._fail.bind(this), this._abort.bind(this));
+            this._canCallTask() && this._callback(this._done.bind(this), this._fail.bind(this), this._abort.bind(this));
         };
         RetryTask.prototype._start = function () {
             var _this = this;

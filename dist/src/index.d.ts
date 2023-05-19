@@ -22,12 +22,17 @@ export declare class RetryTask {
     private _resolve;
     private _reject;
     private _callback;
+    private _isDone;
+    private _isAborted;
     private _retryDelay;
     private _timeout;
     private _timeoutTimer;
     private _retryMaxTimes;
     private _retryCount;
+    private _callbackTimerList;
     private constructor();
+    private _canCallTask;
+    private _clearCallbackTimerList;
     private _done;
     private _fail;
     private _clearMaxTimer;
